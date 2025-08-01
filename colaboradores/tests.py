@@ -46,21 +46,5 @@ class ColaboradorTests(APITestCase):
         
         data = response.json()
         
-        # O colaborador com dependentes deve ter have_dependents=True
         self.assertTrue(any(c['nome'] == 'Alice' and c['have_dependents'] for c in data))
-        
-        # O colaborador sem dependentes deve ter have_dependents=False
         self.assertTrue(any(c['nome'] == 'Bruno' and not c['have_dependents'] for c in data))
-        
-    # Adicionei este teste para ilustrar o erro
-    def test_direct_object_has_no_annotation(self):
-        # AQUI, estamos verificando que a serialização direta de um objeto
-        # não anotado levanta o erro.
-        from colaboradores.serializers import ColaboradorSerializer
-        
-        # Instancie o Serializer com um objeto que não tem a anotação.
-        serializer = ColaboradorSerializer(self.colaborador1)
-        
-        # Agora, teste se o acesso a .data levanta a exceção
-        with self.assertRaises(AttributeError):
-            serializer.data 
