@@ -27,8 +27,8 @@ Para rodar este projeto, você só precisa ter o **Docker** e o **Docker Compose
 
 1.  **Clone o Repositório:**
     ```bash
-    git clone [URL_DO_SEU_REPOSITORIO]
-    cd [pasta_do_projeto]
+    git clone https://github.com/felipemtvieira/projeto-vaga-backend.git
+    cd projeto-vaga-backend
     ```
 
 2.  **Inicie os Containers:**
@@ -36,10 +36,10 @@ Para rodar este projeto, você só precisa ter o **Docker** e o **Docker Compose
     ```bash
     docker-compose up
     ```
-    O primeiro `up` pode demorar um pouco, pois o Docker precisa baixar as imagens e instalar as dependências. Em execuções futuras, será muito mais rápido.
 
 3.  **Acesse a API:**
     * Sua API estará disponível em `http://127.0.0.1:8000/`.
+    * Recomenda-se a utilização da interface do Django REST Framework para visualização simples dos dados: `http://127.0.0.1:8000/api/`
     * A documentação interativa da API (Swagger UI) está em `http://127.0.0.1:8000/swagger/`.
 
 ---
@@ -56,6 +56,63 @@ Para executar os testes do projeto, use o `docker-compose exec` para rodar o com
 
 ---
 
-## Observação: Parâmetro de Documentação
+## Observações
 
-Apesar de configurada, a documentação gerada não detalha explicitamente o parâmetro de consulta `?colaboradores=true` no endpoint de `departamentos`. Essa funcionalidade, embora não documentada no Swagger, está ativa. Optamos por manter o código como está, pois o comportamento é funcional e segue as boas práticas de serialização condicional.
+É importante notar que a rota /departamentos/ não retornará automaticamente os dados dos colaboradores vinculados a ele. Para isso é necessário adicionar o parâmetro de consulta `?colaboradores=true` no endpoint de `departamentos` : `/departamentos/?colaboradores=true`. Também é possível visualizar os colaboradores de um determinado departamento: `/departamentos/{id_departamento}/?colaboradores=true`. Optei por fazer dessa maneira para que o cliente da API tivesse a opção de realizar as duas buscas, sem que a API retornasse dados que o cliente não pediu. Em caso de grandes massas de dados, isso é melhor para performance e também é uma boa prática de desenvolvimento.
+
+Para o desenvolvimento foi utilizado Django pois é o framework Python com o qual tenho maior familiaridade. Além disso ele permite um desenvolvimento rápido e seguro de APIs. Além disso, atentou-se à escalabilidade do projeto: com a divisão em Apps que o Django utiliza, não é  difícil ampliar o projeto conforme novas necessidades, mas sempre mantendo a organização do código.
+
+Também adicionei um arquivo .pdf com a imagem do diagrama relacional para fácil visualizção da estrutura das tabelas.
+
+### Formatos de Dados para Teste
+Abaixo estão exemplos de como os dados devem ser formatados para realizar testes de criação (requisições `POST`) nos endpoints principais da API.
+
+**1. Criar um novo Departamento (`POST` para `/api/departamentos/`)**
+```json
+{
+    "nome": "Recursos Humanos"
+}
+```
+
+**1. Criar um novo Colaborador (`POST` para `/api/colaboradores/`)**
+```json
+{
+    "nome": "João da Silva",
+    "departamento": 1  // ID do departamento ao qual o colaborador pertence
+}
+```
+
+**1. Criar um novo Dependente (`POST` para `/api/dependentes/`)**
+```json
+{
+    "nome": "Maria da Silva",
+    "colaborador": 1 // ID do colaborador ao qual o dependente está relacionado
+}
+```
+
+### Estrutura do repositório
+├── acmevita/             # Pasta principal do projeto Django
+│   ├── __init__.py
+│   ├── asgi.py
+│   ├── settings.py      # Arquivo de configurações do Django
+│   ├── urls.py          # Arquivo de rotas da API
+│   └── wsgi.py
+├── colaboradores/       # Aplicação Django para colaboradores
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── migrations/
+│   ├── models.py        # Modelos de dados
+│   ├── serializers.py   # Serializers para a API
+│   ├── tests.py         # Arquivo de testes unitários
+│   └── views.py         # ViewSets da API
+├── dependentes/         # Aplicação Django para dependentes
+│   ├── ...
+├── departamentos/       # Aplicação Django para departamentos
+│   ├── ...
+├── .gitignore           # Arquivos a serem ignorados pelo Git
+├── docker-compose.yml   # Configuração dos serviços Docker (API e banco de dados)
+├── Dockerfile           # Instruções para construir a imagem da API
+├── entrypoint.sh        # Script de inicialização do container da API
+├── manage.py            # Utilitário de linha de comando do Django
+└── requirements.txt     # Dependências do projeto Python
