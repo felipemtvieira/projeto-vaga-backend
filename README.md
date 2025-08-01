@@ -90,29 +90,3 @@ Abaixo estão exemplos de como os dados devem ser formatados para realizar teste
 }
 ```
 
-### Estrutura do repositório
-├── acmevita/             # Pasta principal do projeto Django
-│   ├── __init__.py
-│   ├── asgi.py
-│   ├── settings.py      # Arquivo de configurações do Django
-│   ├── urls.py          # Arquivo de rotas da API
-│   └── wsgi.py
-├── colaboradores/       # Aplicação Django para colaboradores
-│   ├── __init__.py
-│   ├── admin.py
-│   ├── apps.py
-│   ├── migrations/
-│   ├── models.py        # Modelos de dados
-│   ├── serializers.py   # Serializers para a API
-│   ├── tests.py         # Arquivo de testes unitários
-│   └── views.py         # ViewSets da API
-├── dependentes/         # Aplicação Django para dependentes
-│   ├── ...
-├── departamentos/       # Aplicação Django para departamentos
-│   ├── ...
-├── .gitignore           # Arquivos a serem ignorados pelo Git
-├── docker-compose.yml   # Configuração dos serviços Docker (API e banco de dados)
-├── Dockerfile           # Instruções para construir a imagem da API
-├── entrypoint.sh        # Script de inicialização do container da API
-├── manage.py            # Utilitário de linha de comando do Django
-└── requirements.txt     # Dependências do projeto Python
