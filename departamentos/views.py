@@ -14,8 +14,6 @@ class DepartamentoViewSet(viewsets.ModelViewSet):
 
         if colaboradores_param == 'true':
             colaboradores_com_contagem = Colaborador.objects.annotate(dependentes_count=Count('dependente'))
-
-            print(type(colaboradores_com_contagem))
             
             queryset = queryset.prefetch_related(
                 Prefetch(

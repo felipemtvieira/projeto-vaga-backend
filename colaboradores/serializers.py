@@ -10,4 +10,7 @@ class ColaboradorSerializer(serializers.ModelSerializer):
         fields = ['id', 'nome', 'departamento', 'have_dependents']
 
     def get_have_dependents(self, obj):
-        return obj.dependentes_count > 0
+        if hasattr(obj, 'dependentes_count'):
+            return obj.dependentes_count > 0
+        
+        return obj.dependente_set.exists()
